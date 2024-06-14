@@ -36,7 +36,7 @@ jobs:
       - run: pnpm install
 
       - name: Run benchmarks
-        run: pnpm devlow-benches --datadog=ubuntu-latest-16-core ${{ matrix.mode }} ${{ matrix.selector }}
+        run: node ./node_modules/.bin/devlow-bench --datadog=ubuntu-latest-16-core ${{ matrix.mode }} ${{ matrix.selector }}
         env:
           DATADOG_API_KEY: ${{ secrets.DATADOG_API_KEY }}
           BROWSER_OUTPUT: 1
