@@ -1,5 +1,8 @@
 name: Developer workflow performance
 
+env:
+  NODE_LTS_VERSION: 20
+
 on:
   push:
     branches: ['canary']
@@ -23,12 +26,19 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Setup Playwright
-        run: npx playwright@1.39.0 install
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_LTS_VERSION }}
+      - run: corepack enable
+
+      - run: pnpm install
 
       - name: Run benchmarks
-        run: pnpm --filter devlow-benches run dev-workflow-bench --datadog=ubuntu-latest-16-core ${{ matrix.mode }} ${{ matrix.selector }}
+        run: pnpm devlow-benches --datadog=ubuntu-latest-16-core ${{ matrix.mode }} ${{ matrix.selector }}
         env:
-          # DATADOG_API_KEY: ${{ secrets.DATADOG_API_KEY }}
+          DATADOG_API_KEY: ${{ secrets.DATADOG_API_KEY }}
           BROWSER_OUTPUT: 1
           SHELL_OUTPUT: 1
+
+      - run: echo "Benchmark completed"
