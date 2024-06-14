@@ -4,6 +4,7 @@ env:
   NODE_LTS_VERSION: 20
 
 on:
+  workflow_dispatch:
   push:
     branches: ['canary']
 
